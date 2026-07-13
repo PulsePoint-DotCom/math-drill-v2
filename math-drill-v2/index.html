@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#ff6b35">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Math Drill">
+  <meta name="description" content="Gamified mental math trainer. Earn points, collect mascots, master arithmetic.">
+  <link rel="manifest" href="manifest.json">
+  <title>Math Drill — Train Your Brain</title>
+  <link rel="icon" type="image/svg+xml" href="https://btwv.masonbacotti.com/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="mathdrill.css?v=3">
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="container header-inner">
+      <a href="https://masonbacotti.com" class="logo">
+        <span class="logo-icon">⚡</span>
+        <span>Math Drill</span>
+      </a>
+      <nav>
+        <a href="https://masonbacotti.com">masonbacotti.com</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HOME TAB -->
+  <section id="tab-home" class="tab active">
+
+    <div class="hero-sm">
+      <div class="points-display">
+        <span class="points-label">💰</span>
+        <span id="points-display" class="points-value">0</span>
+        <span class="points-unit">pts</span>
+      </div>
+    </div>
+
+    <div id="home-content">
+
+      <!-- No problem -->
+      <div id="no-problem" class="card">
+        <div class="home-mascot-center" id="home-mascot-center"></div>
+        <button id="solve-now" class="btn btn-primary">Next Question</button>
+      </div>
+
+      <!-- Active problem -->
+      <div id="active-problem" class="card hidden">
+        <div class="problem-layout">
+          <div class="problem-main">
+            <div id="hint-bubble" class="hint-bubble hidden"></div>
+            <div id="problem-display" class="problem-display">7 x 8</div>
+            <div class="diff-label">Difficulty: <span id="diff-badge">Single</span></div>
+            <input type="number" id="answer-input" class="answer-input" placeholder="?" autocomplete="off" inputmode="numeric">
+            <button id="submit-answer" class="btn btn-primary">Submit</button>
+          </div>
+          <div class="mascot-playground" id="mascot-playground">
+            <div class="playground-label">👾 Your Squad</div>
+            <div class="playground-mascots" id="playground-mascots"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="result-display" class="card hidden">
+        <div id="result-icon" class="result-icon">✅</div>
+        <div id="result-text" class="result-text">Correct!</div>
+        <div id="points-change" class="points-change hidden">+20 pts</div>
+        <div id="correct-answer" class="correct-answer hidden">
+          Answer was <span id="expected-answer">56</span>
+        </div>
+        <button id="next-btn" class="btn btn-primary">Next Question</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MASCOTS TAB -->
+  <section id="tab-mascots" class="tab">
+    <div class="hero-sm">
+      <div class="shop-points-display">
+        <span class="points-label">💰</span>
+        <span id="shop-points" class="points-value">0</span>
+        <span class="points-unit">pts</span>
+      </div>
+    </div>
+    <div id="mascot-shop">
+      <div id="mascot-cards" class="mascot-cards-container"></div>
+    </div>
+  </section>
+
+  <!-- STATS TAB -->
+  <section id="tab-stats" class="tab">
+    <div class="hero-sm" style="margin-bottom:0;">
+      <h1 class="page-title">Stats</h1>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" id="points-current">0</div>
+        <div class="stat-label">Current Points</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value" id="points-lifetime">0</div>
+        <div class="stat-label">Lifetime Points</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value" id="current-streak">0</div>
+        <div class="stat-label">Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-value" id="best-streak">0</div>
+        <div class="stat-label">Best Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value" id="accuracy">0%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value" id="avg-time">--</div>
+        <div class="stat-label">Avg. Time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value" id="total-correct">0</div>
+        <div class="stat-label">Correct</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❌</div>
+        <div class="stat-value" id="total-wrong">0</div>
+        <div class="stat-label">Wrong</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👾</div>
+        <div class="stat-value" id="mascots-owned">0</div>
+        <div class="stat-label">Mascots</div>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <div class="section-label">Recent History</div>
+      <ul id="history-list" class="history-list">
+        <li class="history-empty">No problems solved yet</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SETTINGS TAB -->
+  <section id="tab-settings" class="tab">
+    <div class="hero-sm" style="margin-bottom:0;">
+      <h1 class="page-title">Settings</h1>
+    </div>
+
+    <div class="settings-section">
+      <h2 class="settings-heading">Difficulty</h2>
+      <div class="slider-container">
+        <div class="slider-labels">
+          <span>Single</span>
+          <span>Double</span>
+          <span>Multi-step</span>
+        </div>
+        <input type="range" id="difficulty-slider" class="slider" min="1" max="3" value="1">
+      </div>
+      <p class="setting-hint">Higher difficulty = more points per correct answer!</p>
+    </div>
+
+    <div class="settings-section">
+      <h2 class="settings-heading">Operations</h2>
+      <div class="toggle-list">
+        <label class="toggle-item">
+          <span>Addition (+)</span>
+          <input type="checkbox" id="op-add" checked>
+          <span class="toggle-switch"></span>
+        </label>
+        <label class="toggle-item">
+          <span>Subtraction (−)</span>
+          <input type="checkbox" id="op-sub" checked>
+          <span class="toggle-switch"></span>
+        </label>
+        <label class="toggle-item">
+          <span>Multiplication (×)</span>
+          <input type="checkbox" id="op-mul" checked>
+          <span class="toggle-switch"></span>
+        </label>
+        <label class="toggle-item">
+          <span>Division (÷)</span>
+          <input type="checkbox" id="op-div" checked>
+          <span class="toggle-switch"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <button id="reset-stats" class="btn btn-danger">🗑️ Reset All Data</button>
+    </div>
+  </section>
+
+</div><!-- end page-wrap -->
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-tab="home">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-btn" data-tab="mascots">
+    <span class="nav-icon">👾</span>
+    <span class="nav-label">Mascots</span>
+  </button>
+  <button class="nav-btn" data-tab="stats">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">Stats</span>
+  </button>
+  <button class="nav-btn" data-tab="settings">
+    <span class="nav-icon">⚙️</span>
+    <span class="nav-label">Settings</span>
+  </button>
+</nav>
+
+<script src="app.js?v=3"></script>
+</body>
+</html>
