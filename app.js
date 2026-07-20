@@ -682,6 +682,95 @@ function updateStatsUI() {
   document.getElementById('points-current').textContent = pointsData.currentPoints.toLocaleString();
   document.getElementById('points-lifetime').textContent = pointsData.lifetimePoints.toLocaleString();
   document.getElementById('mascots-owned').textContent = mascotsData.owned.length;
+
+  // Draw accuracy chart
+  renderAccuracyChart();
+}
+
+// === Accuracy Chart ===
+function renderAccuracyChart() {
+  const wrap = document.getElementById('accuracyChartWrap');
+  const canvas = document.getElementById('accuracyChart');
+  const ctx = canvas.getContext('2d');
+  const history = stats.history;
+
+  // Need at least 5 problems to show meaningful chart
+  if (history.length < 5) {
+    wrap.classList.add('no-data');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+  wrap.classList.remove('no-data');
+
+  // Build accuracy over last 20 problems
+  const last20 = history.slice(-20);
+  const buckets = [];
+  const bucketSize = Math.ceil(last20.length / 5);
+  for (let i = 0; i < last20.length; i += bucketSize) {
+    const chunk = last20.slice(i, i + bucketSize);
+    const correct = chunk.filter(h => h.correct).length;
+    buckets.push(Math.round((correct / chunk.length) * 100));
+  }
+
+  const W = canvas.width;
+  const H = canvas.height;
+  const pad = { top: 10, right: 10, bottom: 24, left: 32 };
+  const chartW = W - pad.left - pad.right;
+  const chartH = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = '#e5e5e5';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + (chartH / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(pad.left + chartW, y);
+    ctx.stroke();
+    // Y labels
+    ctx.fillStyle = '#999';
+    ctx.font = '10px IBM Plex Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText((100 - i * 25) + '%', pad.left - 4, y + 3);
+  }
+
+  // Bars
+  const barW = (chartW / buckets.length) * 0.65;
+  const gap = (chartW / buckets.length) * 0.35;
+  const barRadius = 3;
+
+  buckets.forEach((val, i) => {
+    const x = pad.left + i * (barW + gap) + gap / 2;
+    const barH = Math.round((val / 100) * chartH);
+    const y = pad.top + chartH - barH;
+
+    // Gradient fill
+    const grad = ctx.createLinearGradient(x, y, x, y + barH);
+    grad.addColorStop(0, '#ff6b35');
+    grad.addColorStop(1, '#ff8c5a');
+    ctx.fillStyle = grad;
+
+    // Rounded rect
+    ctx.beginPath();
+    ctx.roundRect(x, y, barW, barH, [barRadius, barRadius, 0, 0]);
+    ctx.fill();
+
+    // Value on top of bar
+    ctx.fillStyle = '#ff6b35';
+    ctx.font = 'bold 9px IBM Plex Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(val + '%', x + barW / 2, y - 3);
+  });
+
+  // X axis baseline
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, pad.top + chartH);
+  ctx.lineTo(pad.left + chartW, pad.top + chartH);
+  ctx.stroke();
 }
 
 function updateSettingsUI() {
