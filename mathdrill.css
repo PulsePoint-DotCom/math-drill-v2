@@ -473,6 +473,36 @@ nav a:hover { color: var(--text); }
   font-size: 0.9rem;
 }
 .history-empty { color: var(--text-sec); text-align: center; padding: 20px !important; }
+
+/* Accuracy Chart */
+.accuracy-chart-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.chart-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-sec);
+  margin-bottom: 12px;
+}
+#accuracyChart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.chart-empty {
+  color: var(--text-sec);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 12px 0;
+}
+.accuracy-chart-wrap .chart-empty { display: none; }
+.accuracy-chart-wrap.no-data .chart-empty { display: block; }
 .history-item .problem { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.85rem; }
 .history-item .result-icon { font-size: 1.1rem; }
 .history-left { display: flex; flex-direction: column; gap: 2px; }
